@@ -2,7 +2,7 @@
   * Class for managing events.
   * Can be extended to provide event functionality in other classes.
   *
-  * @class EventEmitter Manags event registering and emitting.
+  * @class EventEmitter Manages event registering and emitting.
   */
 var EventEmitter = function() {
     this._events = {};
