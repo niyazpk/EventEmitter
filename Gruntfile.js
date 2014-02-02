@@ -17,12 +17,33 @@ module.exports = function(grunt) {
                 src: '<%= pkg.name %>.js',
                 dest: 'build/<%= pkg.name %>.min.js'
             }
+        },
+
+        jsdoc: {
+            dist: {
+                src: ['<%= pkg.name %>.js'],
+                options: {
+                    destination: 'doc'
+                }
+            }
+        },
+
+        watch: {
+            scripts: {
+                files: ['<%= pkg.name %>.js'],
+                tasks: ['jshint'],
+                options: {
+                    spawn: false,
+                },
+            },
         }
     });
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify']);
