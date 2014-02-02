@@ -1,9 +1,11 @@
-var EventEmitter = function() {};
+var EventEmitter = function() {
+    this._events = {};
+    this._maxListeners = 10;
+};
 
 EventEmitter.prototype = {
 
     on: function(event, fn) {
-        this._events = this._events || {};
         this.emit('newListener', event, fn);
         this._events[event] = this._events[event] || [];
         this._events[event].push(fn);
@@ -11,7 +13,6 @@ EventEmitter.prototype = {
     },
 
     off: function(event, fn) {
-        this._events = this._events || {};
         if (event in this._events) {
             var index = this._events[event].indexOf(fn);
             if(index !== -1) {
@@ -30,8 +31,12 @@ EventEmitter.prototype = {
         });
     },
 
+    setMaxListeners: function(n) {
+        this._maxListeners = n || 0;
+        return this;
+    },
+
     removeAllListeners: function(event) {
-        this._events = this._events || {};
         if(event) {
             delete this._events[event];
         } else {
@@ -41,13 +46,11 @@ EventEmitter.prototype = {
     },
 
     listeners : function (event) {
-        this._events = this._events || {};
         return (this._events[event] || []).slice();
     },
 
     emit: function(event /* , args */ ) {
         
-        this._events = this._events || {};
         var args     = Array.prototype.slice.call(arguments, 1);
         var handlers = this._events[event];
 
