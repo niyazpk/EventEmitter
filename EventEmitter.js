@@ -65,3 +65,16 @@ EventEmitter.prototype = {
         }
     }
 };
+
+EventEmitter.prototype.addListener    = EventEmitter.prototype.on;
+EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
+
+EventEmitter.listenerCount = function(emitter, event) {
+    return emitter.listeners(event).length;
+
+};
+
+// export
+if (typeof module !== 'undefined' && ('exports' in module)) {
+    module.exports = EventEmitter;
+}
