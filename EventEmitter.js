@@ -29,7 +29,7 @@ EventEmitter.prototype = {
      * Remove a listener from the listener array for the specified event. 
      * Caution: changes array indices in the listener array behind the listener.
      *
-     * @param {String} event Name of teh event to remove the listener from.
+     * @param {String} event Name of the event to remove the listener from.
      * @param {Function} listener Method to remove from the event.
      * @return {Object} Current instance of EventEmitter for chaining.
      */
@@ -129,7 +129,32 @@ EventEmitter.prototype.addListener    = EventEmitter.prototype.on;
 EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
 
 /**
- * Return the number of listenes for a given event.
+ * Make any object an emitter
+ *
+ * @example require('EventEmitter').mixin(obj) will make obj able to use EventEmitter
+ *
+ * @param {Object} the object which will support EventEmitter
+ */
+EventEmitter.mixin = function(obj) {
+
+    // Copy these properties over.
+    // Todo - this is not clean. Query this from EventEmitter if possible.
+    var props = ['on', 'off', 'once', 'emit', 'setMaxListeners', 'removeAllListeners', 'listeners', 'addListener', 'removeListener'];
+    for (var i = 0; i < props.length; i++) {
+        if (typeof obj === 'function') {
+            obj.prototype[props[i]] = EventEmitter.prototype[props[i]];
+        } else {
+            obj[props[i]] = EventEmitter.prototype[props[i]];
+        }
+    }
+
+    // Todo - this should be queried from the event object
+    obj._events = {};
+    obj._maxListeners = 10;
+};
+
+/**
+ * Return the number of listeners for a given event.
  *
  * @param {Object} emitter The object which emits events.
  * @param {String} event The event name.
