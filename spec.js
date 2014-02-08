@@ -1,3 +1,12 @@
+var isNode = typeof module !== 'undefined' && module.exports;
+
+if(isNode) {
+    EventEmitter = require('./EventEmitter');
+    expect       = require('chai').expect;
+    sinon        = require('sinon');
+}
+
+
 describe("EventEmitter", function() {
     var eventEmitter;
     var event_funcs;

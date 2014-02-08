@@ -8,7 +8,10 @@
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-jsdoc": "~0.5.1",
-    "grunt-mocha": "~0.4.10"
+    "grunt-mocha": "~0.4.10",
+    "grunt-mocha-test": "~0.9.0",
+    "sinon": "~1.8.1",
+    "chai": "~1.9.0"
   },
   "jshintConfig": {
     "bitwise": false,
