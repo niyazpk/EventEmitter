@@ -12,7 +12,7 @@ describe("EventEmitter", function() {
     var event_funcs;
 
     beforeEach(function() {
-        eventEmitter = new EventEmitter(); 
+        eventEmitter = new EventEmitter();
 
         event_funcs = {
             foo: function() {},
