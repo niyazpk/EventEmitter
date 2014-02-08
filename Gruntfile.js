@@ -19,6 +19,16 @@ module.exports = function(grunt) {
             }
         },
 
+        mocha: {
+            test: {
+                src: ['tests/**/*.html'],
+                options: {
+                    run: true,
+                    reporter: 'Spec'
+                }
+            },
+        },
+
         jsdoc: {
             dist: {
                 src: ['<%= pkg.name %>.js'],
@@ -39,13 +49,14 @@ module.exports = function(grunt) {
         }
     });
 
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify']);
+    grunt.registerTask('test', ['mocha']);
 
 };
