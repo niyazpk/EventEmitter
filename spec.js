@@ -1,9 +1,9 @@
 var isNode = typeof module !== 'undefined' && module.exports;
 
-if(isNode) {
+if (isNode) {
     EventEmitter = require('./EventEmitter');
-    expect       = require('chai').expect;
-    sinon        = require('sinon');
+    expect = require('chai').expect;
+    sinon = require('sinon');
 }
 
 
@@ -17,11 +17,17 @@ describe("EventEmitter", function() {
         event_funcs = {
             foo: function() {},
             bar: function() {},
-            baz: function() {}
+            baz: function() {},
+            wat: 'not function'
         };
         sinon.spy(event_funcs, 'foo');
         sinon.spy(event_funcs, 'bar');
         sinon.spy(event_funcs, 'baz');
+
+        sinon.spy(eventEmitter, 'on');
+        sinon.spy(eventEmitter, 'off');
+        sinon.spy(eventEmitter, 'emit');
+        sinon.spy(eventEmitter, 'setMaxListeners');
 
     });
 
@@ -118,11 +124,62 @@ describe("EventEmitter", function() {
 
     it("keeps working when unbinding unknown event", function() {
         eventEmitter.on('event_one', event_funcs.foo);
-        eventEmitter.off('unknown_event');
+        eventEmitter.off('unknown_event', event_funcs.foo);
 
         eventEmitter.emit('event_one');
 
         expect(event_funcs.foo.called).to.be.true;
 
+    });
+
+
+    describe("Validations", function() {
+        it("on: throws error if listener is not a function", function() {
+            try {
+                eventEmitter.on('event_one', event_funcs.wat);
+            } catch (e) {}
+            expect(eventEmitter.on.threw()).to.be.true;
+            expect(eventEmitter.on.threw("TypeError")).to.be.true;
+        });
+
+        it("off: throws error if listener is not a function", function() {
+            try {
+                eventEmitter.off('event_one', event_funcs.wat);
+            } catch (e) {}
+            expect(eventEmitter.off.threw()).to.be.true;
+            expect(eventEmitter.off.threw("TypeError")).to.be.true;
+        });
+
+        it("emit: throws error if error handler is not defined", function() {
+            try {
+                eventEmitter.emit('error');
+            } catch (e) {}
+            expect(eventEmitter.emit.threw()).to.be.true;
+            expect(eventEmitter.emit.threw("Error")).to.be.true;
+        });
+
+        it("emit: throws custom error if it is passed", function() {
+            try {
+                eventEmitter.emit('error', new TypeError());
+            } catch (e) {}
+            expect(eventEmitter.emit.threw()).to.be.true;
+            expect(eventEmitter.emit.threw("TypeError")).to.be.true;
+        });
+
+        it("setMaxListeners: don't throw error if n is a number", function() {
+            try {
+                eventEmitter.setMaxListeners(15);
+            } catch (e) {}
+            expect(eventEmitter.setMaxListeners.threw()).to.be.false;
+            expect(eventEmitter.setMaxListeners.threw("TypeError")).to.be.false;
+        });
+
+        it("setMaxListeners: throws error if n is not a number", function() {
+            try {
+                eventEmitter.setMaxListeners('wat');
+            } catch (e) {}
+            expect(eventEmitter.setMaxListeners.threw()).to.be.true;
+            expect(eventEmitter.setMaxListeners.threw("TypeError")).to.be.true;
+        });
     });
 });

@@ -64,6 +64,11 @@ EventEmitter.prototype = (function() {
          * @return {Object} Current instance of EventEmitter for chaining.
          */
         off: function(event, fn) {
+
+            if (!isFunction(fn)) {
+                throw new TypeError('listener must be a function');
+            }
+
             if (event in this._events) {
                 var index = this._events[event].indexOf(fn);
                 if (index !== -1) {
@@ -165,7 +170,7 @@ EventEmitter.prototype = (function() {
 
 }());
 
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+EventEmitter.prototype.addListener    = EventEmitter.prototype.on;
 EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
 
 /**
@@ -202,7 +207,6 @@ EventEmitter.mixin = function(obj) {
  */
 EventEmitter.listenerCount = function(emitter, event) {
     return emitter.listeners(event).length;
-
 };
 
 // export
